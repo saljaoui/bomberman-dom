@@ -106,7 +106,7 @@ function setupPlayerControls() {
         }
         if (keysPressed['ArrowRight']) {
             gameState.player.x += gameState.player.speed;
-            gameState.player.positionY = 42
+            gameState.player.positionY = 41
             gameState.player.positionX = 30
             console.log('ArrowRight');
         }
