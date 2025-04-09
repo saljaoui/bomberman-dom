@@ -10,8 +10,8 @@ const gameState = {
         bombPower: 1,
         positionX: 0,
         positionY: 0,
-        width: 30,
-        height: 40,
+        width: 27,
+        height: 41,
         lives: 3,
         speed: 2,
         isMoving: false,
@@ -82,7 +82,7 @@ function drwaPlayer() {
     player.style.height = gameState.player.height + 'px';
     player.style.backgroundImage = `url(${gameState.player.style})`;
     player.style.backgroundPositionY = gameState.player.positionY + 'px';
-    // player.style.backgroundPositionX = gameState.player.positionX + 'px';
+    player.style.backgroundPositionX = gameState.player.positionX + 'px';
     player.style.transform = `translate(${gameState.player.x}px, ${gameState.player.y}px)`;
 }
 
@@ -100,22 +100,25 @@ function setupPlayerControls() {
     function updatePlayerMovement() {
         if (keysPressed['ArrowUp']) {
             gameState.player.y -= gameState.player.speed;
-            // gameState.player.positionX = 30
-            gameState.player.positionY = 80
+            gameState.player.positionX = 56
+            gameState.player.positionY = 82
             console.log('ArrowUp');
         }
         if (keysPressed['ArrowRight']) {
             gameState.player.x += gameState.player.speed;
-            gameState.player.positionY = 40
+            gameState.player.positionY = 42
+            gameState.player.positionX = 30
             console.log('ArrowRight');
         }
         if (keysPressed['ArrowDown']) {
             gameState.player.y += gameState.player.speed;
+            gameState.player.positionX = 53
             gameState.player.positionY = 0
             console.log('ArrowDown');
         }
         if (keysPressed['ArrowLeft']) {
-            gameState.player.positionY = 120
+            gameState.player.positionY = 124
+            gameState.player.positionX = 0
             gameState.player.x -= gameState.player.speed;
             console.log('ArrowLeft');
         }
