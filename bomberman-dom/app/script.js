@@ -6,15 +6,18 @@ const gameState = {
     player: {
         x: 5,
         y: 5,
-        velocityX: 0,
-        velocityY: 0,
-        isMoving: false,
-        lives: 3,
         bombsPlaced: 0,
         bombPower: 1,
-        speed: 5,
+        velocityX: 0,
+        velocityY: 0,
+        width: 30,
+        height: 40,
+        lives: 3,
+        speed: 1,
+        isMoving: false,
         isDead: false,
         direction: 'up',
+        style: new Image()
     },
     bombs: [
         {
@@ -46,10 +49,10 @@ const gameState = {
         // more walls hena
     ],
     levelData: {
-        grid: [
+        template: [
             ['W', 'W', 'W', ' ', 'B', 'B', 'B'],
             ['W', ' ', ' ', ' ', 'B', ' ', ' '],
-            ['W', 'W', 'W', ' ', 'B', 'B', 'B'],
+            ['W', 'W', 'W', ' ', 'B', 'B', 'B'],  // S
             [' ', ' ', 'W', ' ', ' ', ' ', 'B'],
             ['W', 'W', 'W', ' ', 'B', 'B', 'B'],
         ],
@@ -57,29 +60,78 @@ const gameState = {
     }
 
 };
+let app = document.getElementById('game');
+let player = document.createElement('div');
+player.id = 'player'
+app.appendChild(player)
 
+gameState.player.style = "assets/images/playerStyle.png"
 
-function test() {
-    let app = document.getElementById('game');
-    let test = document.createElement('div');
-    app.appendChild(test);
+function game() {
+    drwaPlayer()
+    requestAnimationFrame(game)
+}
 
+game();
+
+function drwaPlayer() {
+    let player = document.getElementById('player');    
+    player.style.position = 'absolute';
+    player.style.width = gameState.player.width + 'px';
+    player.style.height = gameState.player.height + 'px';
+    player.style.backgroundImage = `url(${gameState.player.style})`;
+    player.style.transform = `translate(${gameState.player.x}px, ${gameState.player.y}px)`;
+    app.appendChild(player);
+    addEventofPlayer(player);
+}
+
+function addEventofPlayer(player) {
     addEventListener('keydown', (e) => {
-        console.log(e);
         if (e.key === 'ArrowUp') {
+            gameState.player.y -= gameState.player.speed;
             console.log('ArrowUp');
-            test.textContent = 'ArrowUp';
         } else if (e.key === 'ArrowRight') {
+            gameState.player.x += gameState.player.speed;
             console.log('ArrowRight');
-            test.textContent = 'ArrowRight';
         } else if (e.key === 'ArrowDown') {
+            gameState.player.y += gameState.player.speed;
             console.log('ArrowDown');
-            test.textContent = 'ArrowDown';
         } else if (e.key === 'ArrowLeft') {
+            gameState.player.x -= gameState.player.speed;
             console.log('ArrowLeft');
-            test.textContent = 'ArrowLeft';
         }
+        player.style.transform = `translate(${gameState.player.x}px, ${gameState.player.y}px)`;
     });
 }
 
-test();
+
+
+
+
+
+
+
+
+// function test() {
+//     let app = document.getElementById('game');
+//     let test = document.createElement('div');
+//     app.appendChild(test);
+
+//     addEventListener('keydown', (e) => {
+//         if (e.key === 'ArrowUp') {
+//             console.log('ArrowUp');
+//             test.textContent = 'ArrowUp';
+//         } else if (e.key === 'ArrowRight') {
+//             console.log('ArrowRight');
+//             test.textContent = 'ArrowRight';
+//         } else if (e.key === 'ArrowDown') {
+//             console.log('ArrowDown');
+//             test.textContent = 'ArrowDown';
+//         } else if (e.key === 'ArrowLeft') {
+//             console.log('ArrowLeft');
+//             test.textContent = 'ArrowLeft';
+//         }
+//     });
+// }
+
+// test();
