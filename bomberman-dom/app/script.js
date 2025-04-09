@@ -4,8 +4,8 @@ const gameState = {
     gameOver: false,
     isPaused: false,
     player: {
-        x: 5,
-        y: 5,
+        x: 1,
+        y: 1,
         bombsPlaced: 0,
         bombPower: 1,
         velocityX: 0,
@@ -13,7 +13,7 @@ const gameState = {
         width: 30,
         height: 40,
         lives: 3,
-        speed: 1,
+        speed: 2,
         isMoving: false,
         isDead: false,
         direction: 'up',
@@ -60,6 +60,7 @@ const gameState = {
     }
 
 };
+
 let app = document.getElementById('game');
 let player = document.createElement('div');
 player.id = 'player'
@@ -81,31 +82,47 @@ function drwaPlayer() {
     player.style.height = gameState.player.height + 'px';
     player.style.backgroundImage = `url(${gameState.player.style})`;
     player.style.transform = `translate(${gameState.player.x}px, ${gameState.player.y}px)`;
-    app.appendChild(player);
-    addEventofPlayer(player);
 }
 
-function addEventofPlayer(player) {
+function setupPlayerControls() {
+    let keysPressed = {};
+
     addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowUp') {
+        keysPressed[e.key] = true;
+    });
+
+    addEventListener('keyup', (e) => {
+        keysPressed[e.key] = false;
+    });
+
+    function updatePlayerMovement() {
+        if (keysPressed['ArrowUp']) {
             gameState.player.y -= gameState.player.speed;
             console.log('ArrowUp');
-        } else if (e.key === 'ArrowRight') {
+        }
+        if (keysPressed['ArrowRight']) {
             gameState.player.x += gameState.player.speed;
             console.log('ArrowRight');
-        } else if (e.key === 'ArrowDown') {
+        }
+        if (keysPressed['ArrowDown']) {
             gameState.player.y += gameState.player.speed;
             console.log('ArrowDown');
-        } else if (e.key === 'ArrowLeft') {
+        }
+        if (keysPressed['ArrowLeft']) {
             gameState.player.x -= gameState.player.speed;
             console.log('ArrowLeft');
         }
+
+        let player = document.getElementById('player');
         player.style.transform = `translate(${gameState.player.x}px, ${gameState.player.y}px)`;
-    });
+
+        requestAnimationFrame(updatePlayerMovement);
+    }
+
+    updatePlayerMovement();
 }
 
-
-
+setupPlayerControls();
 
 
 
