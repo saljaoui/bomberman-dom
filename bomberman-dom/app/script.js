@@ -115,7 +115,7 @@ function setupPlayerControls() {
 
         let player = document.getElementById('player');
         player.style.transform = `translate(${gameState.player.x}px, ${gameState.player.y}px)`;
-
+        
         requestAnimationFrame(updatePlayerMovement);
     }
 
