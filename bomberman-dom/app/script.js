@@ -8,8 +8,8 @@ const gameState = {
         y: 1,
         bombsPlaced: 0,
         bombPower: 1,
-        velocityX: 0,
-        velocityY: 0,
+        positionX: 0,
+        positionY: 0,
         width: 30,
         height: 40,
         lives: 3,
@@ -76,11 +76,13 @@ function game() {
 game();
 
 function drwaPlayer() {
-    let player = document.getElementById('player');    
+    let player = document.getElementById('player');
     player.style.position = 'absolute';
     player.style.width = gameState.player.width + 'px';
     player.style.height = gameState.player.height + 'px';
     player.style.backgroundImage = `url(${gameState.player.style})`;
+    player.style.backgroundPositionY = gameState.player.positionY + 'px';
+    // player.style.backgroundPositionX = gameState.player.positionX + 'px';
     player.style.transform = `translate(${gameState.player.x}px, ${gameState.player.y}px)`;
 }
 
@@ -98,24 +100,31 @@ function setupPlayerControls() {
     function updatePlayerMovement() {
         if (keysPressed['ArrowUp']) {
             gameState.player.y -= gameState.player.speed;
+            // gameState.player.positionX = 30
+            gameState.player.positionY = 80
+
             console.log('ArrowUp');
         }
         if (keysPressed['ArrowRight']) {
             gameState.player.x += gameState.player.speed;
+            gameState.player.positionY = 40
             console.log('ArrowRight');
         }
         if (keysPressed['ArrowDown']) {
             gameState.player.y += gameState.player.speed;
+            gameState.player.positionY = 0
             console.log('ArrowDown');
         }
         if (keysPressed['ArrowLeft']) {
+            gameState.player.positionY = 120
             gameState.player.x -= gameState.player.speed;
+
             console.log('ArrowLeft');
         }
 
         let player = document.getElementById('player');
         player.style.transform = `translate(${gameState.player.x}px, ${gameState.player.y}px)`;
-        
+
         requestAnimationFrame(updatePlayerMovement);
     }
 
