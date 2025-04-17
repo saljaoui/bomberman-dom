@@ -1,24 +1,25 @@
-
 const gameState = {
     level: 1,
     gameOver: false,
     isPaused: false,
+
     player: {
         x: 1,
         y: 1,
         bombsPlaced: 0,
         bombPower: 1,
-        positionX: 0,
+        positionX: 52,
         positionY: 0,
-        width: 27,
-        height: 41,
+        width: 22,
+        height: 40,
         lives: 3,
-        speed: 2,
+        speed: 7,
         isMoving: false,
         isDead: false,
         direction: 'up',
-        style: new Image()
+        style: new Image().src = "assets/images/playerStyle.png"
     },
+
     bombs: [
         {
             x: 3,
@@ -28,6 +29,7 @@ const gameState = {
             owner: 'player',
         }
     ],
+
     enemies: [
         {
             // enemie wa7d 1
@@ -35,6 +37,7 @@ const gameState = {
         // more enemies hna 
 
     ],
+
     walls: [
         {
             x: 0,
@@ -48,6 +51,7 @@ const gameState = {
         }
         // more walls hena
     ],
+
     levelData: {
         template: [
             ['W', 'W', 'W', ' ', 'B', 'B', 'B'],
@@ -58,7 +62,6 @@ const gameState = {
         ],
         timeElapsed: 0
     }
-
 };
 
 let app = document.getElementById('game');
@@ -75,6 +78,17 @@ function game() {
 
 game();
 
+
+
+
+
+
+
+
+
+
+
+
 function drwaPlayer() {
     let player = document.getElementById('player');
     player.style.position = 'absolute';
@@ -85,9 +99,40 @@ function drwaPlayer() {
     player.style.backgroundPositionX = gameState.player.positionX + 'px';
     player.style.transform = `translate(${gameState.player.x}px, ${gameState.player.y}px)`;
 }
-
 function setupPlayerControls() {
     let keysPressed = {};
+    let movementStartTime = null;
+    let lastUpdateTime = Date.now();
+
+    const spriteMap = {
+        up: [
+            { x: 55, y: 82 },
+            { x: 28, y: 82 },
+            { x: 55, y: 82 },
+            { x: 81, y: 82 },
+        ],
+        right: [
+            { x: 30, y: 41 },
+            { x: 55, y: 41 },
+            { x: 30, y: 41 }, // pic 1
+            { x: -5, y: 41 },  // pic 2
+            
+        ],
+        down: [
+            { x: 52, y: 0 },
+            { x: 27, y: 0 },
+            { x: 52, y: 0 },
+            { x: 78, y: 0 }
+
+        ],
+        left: [
+            { x: -5, y: 124 },
+            { x: 30, y: 124 },
+            { x: -5, y: 124 },
+            { x: 82, y: 124 },
+
+        ]
+    };
 
     addEventListener('keydown', (e) => {
         keysPressed[e.key] = true;
@@ -98,33 +143,55 @@ function setupPlayerControls() {
     });
 
     function updatePlayerMovement() {
+        const now = Date.now();
+        const deltaTime = (now - lastUpdateTime) / 100; // Convert to seconds
+        lastUpdateTime = now;
+
+        const player = gameState.player;
+        player.isMoving = false;
+
         if (keysPressed['ArrowUp']) {
-            gameState.player.y -= gameState.player.speed;
-            gameState.player.positionX = 56
-            gameState.player.positionY = 82
-            console.log('ArrowUp');
+            player.y -= player.speed * deltaTime;
+            player.direction = 'up';
+            player.isMoving = true;
         }
         if (keysPressed['ArrowRight']) {
-            gameState.player.x += gameState.player.speed;
-            gameState.player.positionY = 41
-            gameState.player.positionX = 30
-            console.log('ArrowRight');
+            player.x += player.speed * deltaTime;
+            player.direction = 'right';
+            player.isMoving = true;
         }
         if (keysPressed['ArrowDown']) {
-            gameState.player.y += gameState.player.speed;
-            gameState.player.positionX = 53
-            gameState.player.positionY = 0
-            console.log('ArrowDown');
+            player.y += player.speed * deltaTime;
+            player.direction = 'down';
+            player.isMoving = true;
         }
         if (keysPressed['ArrowLeft']) {
-            gameState.player.positionY = 124
-            gameState.player.positionX = 0
-            gameState.player.x -= gameState.player.speed;
-            console.log('ArrowLeft');
+            player.x -= player.speed * deltaTime;
+            player.direction = 'left';
+            player.isMoving = true;
         }
 
-        let player = document.getElementById('player');
-        player.style.transform = `translate(${gameState.player.x}px, ${gameState.player.y}px)`;
+        if (player.isMoving) {
+            if (!movementStartTime) movementStartTime = now;
+            const elapsed = now - movementStartTime;
+            const frameDuration = 200; // Time between animation frames (ms)
+            
+            const frames = spriteMap[player.direction];
+            const frameIndex = Math.floor(elapsed / frameDuration) % frames.length;
+            
+            player.positionX = frames[frameIndex].x;
+            player.positionY = frames[frameIndex].y;
+        } else {
+            if (movementStartTime) {
+                const frames = spriteMap[player.direction];
+                player.positionX = frames[0].x;
+                player.positionY = frames[0].y;
+                movementStartTime = null;
+            }
+        }
+
+        const playerElement = document.getElementById('player');
+        playerElement.style.transform = `translate(${player.x}px, ${player.y}px)`;
 
         requestAnimationFrame(updatePlayerMovement);
     }
@@ -133,32 +200,3 @@ function setupPlayerControls() {
 }
 
 setupPlayerControls();
-
-
-
-
-
-
-// function test() {
-//     let app = document.getElementById('game');
-//     let test = document.createElement('div');
-//     app.appendChild(test);
-
-//     addEventListener('keydown', (e) => {
-//         if (e.key === 'ArrowUp') {
-//             console.log('ArrowUp');
-//             test.textContent = 'ArrowUp';
-//         } else if (e.key === 'ArrowRight') {
-//             console.log('ArrowRight');
-//             test.textContent = 'ArrowRight';
-//         } else if (e.key === 'ArrowDown') {
-//             console.log('ArrowDown');
-//             test.textContent = 'ArrowDown';
-//         } else if (e.key === 'ArrowLeft') {
-//             console.log('ArrowLeft');
-//             test.textContent = 'ArrowLeft';
-//         }
-//     });
-// }
-
-// test();
